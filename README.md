@@ -1,7 +1,7 @@
 # CT-VaeSSC
 A new method for predicting gene regulatory networks.
 
-The repository for BoolODE is located at: https://github.com/Murali-group/Beeline
+The repository for BEELINE is located at: https://github.com/Murali-group/Beeline
 
 The repository for BoolODE is located at: https://github.com/Murali-group/BoolODE
 
