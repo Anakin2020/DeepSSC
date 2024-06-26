@@ -55,7 +55,6 @@ class CT_VaeSSC_model:
             os.mkdir(opt.save_name)
         except:
             print('dir exist')
-
     def initalize_A(self, data):
         num_genes = data.shape[1]
         A = np.ones([num_genes, num_genes]) / (num_genes - 1) + (np.random.rand(num_genes * num_genes) * 0.0002).reshape(
@@ -63,7 +62,6 @@ class CT_VaeSSC_model:
         for i in range(len(A)):
             A[i, i] = 0
         return A
-
     def init_data(self):
         Ground_Truth = pd.read_csv(self.opt.net_file, header=0)
         data = sc.read(self.opt.data_file)
@@ -96,7 +94,6 @@ class CT_VaeSSC_model:
         idx_rec, idx_send = np.where(A_truth)
         truth_edges = set(zip(idx_send, idx_rec))
         return dataloader, Evaluate_Mask, num_nodes, num_genes, data, truth_edges, TF_mask, gene_name
-
     def init_data1(self):
         Ground_Truth = pd.read_csv(self.opt.net_file, header=0)
         data1 = sc.read(self.opt.data_stage1)
@@ -442,7 +439,6 @@ class CT_VaeSSC_model:
                 vae4.adj_A.requires_grad = True
                 vae5.adj_A.requires_grad = True
                 vae6.adj_A.requires_grad = True
-
             for i, (data_batch,data_batch1, data_batch2, data_batch3, data_batch4, data_batch5, data_batch6) \
                     in enumerate(zip(dataloader,dataloader1, dataloader2,dataloader3,dataloader4,dataloader5,dataloader6), 0):
                 optimizer.zero_grad()
@@ -452,7 +448,6 @@ class CT_VaeSSC_model:
                 optimizer_4.zero_grad()
                 optimizer_5.zero_grad()
                 optimizer_6.zero_grad()
-
                 inputs, data_id, dropout_mask = data_batch
                 inputs1, data_id1, dropout_mask1 = data_batch1
                 inputs2, data_id2, dropout_mask2 = data_batch2
@@ -460,7 +455,6 @@ class CT_VaeSSC_model:
                 inputs4, data_id4, dropout_mask4 = data_batch4
                 inputs5, data_id5, dropout_mask5 = data_batch5
                 inputs6, data_id6, dropout_mask6 = data_batch6
-
                 inputs = Variable(inputs.type(Tensor))
                 inputs1 = Variable(inputs1.type(Tensor))
                 inputs2 = Variable(inputs2.type(Tensor))
@@ -468,7 +462,6 @@ class CT_VaeSSC_model:
                 inputs4 = Variable(inputs4.type(Tensor))
                 inputs5 = Variable(inputs5.type(Tensor))
                 inputs6 = Variable(inputs6.type(Tensor))
-
                 data_ids.append(data_id.cpu().detach().numpy())
                 data_ids1.append(data_id1.cpu().detach().numpy())
                 data_ids2.append(data_id2.cpu().detach().numpy())
@@ -476,23 +469,14 @@ class CT_VaeSSC_model:
                 data_ids4.append(data_id4.cpu().detach().numpy())
                 data_ids5.append(data_id5.cpu().detach().numpy())
                 data_ids6.append(data_id6.cpu().detach().numpy())
-
                 temperature = max(0.95 ** epoch, 0.5)
-                loss, loss_rec, loss_gauss, loss_cat, dec, y, hidden = vae(inputs, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-                loss1, loss_rec1, loss_gauss1, loss_cat1, dec1, y1, hidden1 = vae1(inputs1, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)#########
-                loss2, loss_rec2, loss_gauss2, loss_cat2, dec2, y2, hidden2 = vae2(inputs2, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-                loss3, loss_rec3, loss_gauss3, loss_cat3, dec3, y3, hidden3 = vae3(inputs3, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-                loss4, loss_rec4, loss_gauss4, loss_cat4, dec4, y4, hidden4 = vae4(inputs4, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-                loss5, loss_rec5, loss_gauss5, loss_cat5, dec5, y5, hidden5 = vae5(inputs5, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-                loss6, loss_rec6, loss_gauss6, loss_cat6, dec6, y6, hidden6 = vae6(inputs6, dropout_mask=None,
-                                                                                   temperature=temperature, opt=opt)
-
+                loss, loss_rec, loss_gauss, loss_cat, dec, y, hidden = vae(inputs, dropout_mask=None,temperature=temperature, opt=opt)
+                loss1, loss_rec1, loss_gauss1, loss_cat1, dec1, y1, hidden1 = vae1(inputs1, dropout_mask=None,temperature=temperature, opt=opt)
+                loss2, loss_rec2, loss_gauss2, loss_cat2, dec2, y2, hidden2 = vae2(inputs2, dropout_mask=None,temperature=temperature, opt=opt)
+                loss3, loss_rec3, loss_gauss3, loss_cat3, dec3, y3, hidden3 = vae3(inputs3, dropout_mask=None,temperature=temperature, opt=opt)
+                loss4, loss_rec4, loss_gauss4, loss_cat4, dec4, y4, hidden4 = vae4(inputs4, dropout_mask=None,temperature=temperature, opt=opt)
+                loss5, loss_rec5, loss_gauss5, loss_cat5, dec5, y5, hidden5 = vae5(inputs5, dropout_mask=None, temperature=temperature, opt=opt)
+                loss6, loss_rec6, loss_gauss6, loss_cat6, dec6, y6, hidden6 = vae6(inputs6, dropout_mask=None,temperature=temperature, opt=opt)
                 sparse_loss = opt.alpha * torch.mean(torch.abs(vae.adj_A))
                 sparse_loss1 = opt.alpha * torch.mean(torch.abs(vae1.adj_A))
                 w1_2 = torch.load('data_mHSC/data/w/w_stage2.pt')
@@ -534,13 +518,12 @@ class CT_VaeSSC_model:
                 loss_all.append(loss_sum.item())
                 loss_gauss_sum = loss_gauss + loss_gauss1+loss_gauss2+loss_gauss3+loss_gauss4+loss_gauss5+loss_gauss6
                 loss_cat_sum = loss_cat + loss_cat1+loss_cat2+loss_cat3+loss_cat4+loss_cat5+loss_cat6
-                loss_kl.append(loss_gauss_sum.item() + loss_cat_sum.item())######
+                loss_kl.append(loss_gauss_sum.item() + loss_cat_sum.item())
                 sparse_loss_sum = sparse_loss + sparse_loss1 + sparse_loss2 + sparse_loss3 + sparse_loss4 + sparse_loss5 + sparse_loss6
                 loss_sparse.append(sparse_loss_sum.item())
                 loss_w_stage.append(w_stage1_2_loss.item() + w_stage2_1_loss.item() + w_stage2_3_loss.item() + w_stage3_2_loss.item() +
                                     w_stage3_Lym_loss.item() + w_stage3_ME_loss.item() + w_stage3_GM_loss.item() +
                                     w_stage4_3_loss.item() + w_stage5_3_loss.item() + w_stage6_3_loss.item())
-
                 if epoch % (opt.K1 + opt.K2) < opt.K1:
                     optimizer.step()
                     optimizer_1.step()
@@ -575,15 +558,7 @@ class CT_VaeSSC_model:
             scheduler5.step()
             scheduler6.step()
             if epoch % (opt.K1 + opt.K2) >= opt.K1:
-                Ep, Epr = evaluate(vae.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep1, Epr1 = evaluate(vae1.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep2, Epr2 = evaluate(vae2.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep3, Epr3 = evaluate(vae3.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep4, Epr4 = evaluate(vae4.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep5, Epr5 = evaluate(vae5.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                Ep6, Epr6 = evaluate(vae6.adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
-                n = Epr + Epr1 + Epr2 + Epr3 + Epr4 + Epr5 + Epr6
-                vae_adj_A = (Epr*vae.adj_A + Epr1*vae1.adj_A + Epr2*vae2.adj_A + Epr3*vae3.adj_A + Epr4*vae4.adj_A + Epr5*vae5.adj_A + Epr6*vae6.adj_A)/n
+                vae_adj_A = vae1.adj_A + vae2.adj_A + vae3.adj_A + vae4.adj_A + vae5.adj_A + vae6.adj_A)/6
                 Ep, Epr = evaluate(vae_adj_A.cpu().detach().numpy(), truth_edges, Evaluate_Mask)
                 best_Epr = max(Epr,best_Epr)
                 print('epoch:', epoch, 'Ep:', Ep, 'Epr:', Epr, 'loss:',
@@ -591,6 +566,5 @@ class CT_VaeSSC_model:
                       np.mean(loss_sparse),"SSC_loss:",np.mean(loss_w_stage))
         extractEdgesFromMatrix(vae_adj_A.cpu().detach().numpy(), gene_name, TFmask2).to_csv(
             opt.save_name + '/result.tsv', sep='\t', index=False)
-
 model = CT_VaeSSC_model(opt)
 model.train_model()
