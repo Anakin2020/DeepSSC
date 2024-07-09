@@ -1,4 +1,4 @@
-# CT-VaeSSC
+# DeepSSC
 A new method for predicting gene regulatory networks.
 
 The repository for BEELINE is located at: https://github.com/Murali-group/Beeline
