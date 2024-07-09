@@ -6,14 +6,14 @@ import numpy as np
 
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description='Generate experimental scRNA-seq inputs.', epilog = 'Example usage to generate dataset with all TFs and 500 genes (TFs+500): python generateInputs.py -e=ExpressionData.csv -g=GeneOrdering.csv -f=STRING-network.csv -i=human-tfs.csv -p=0.01 -c -t -n=500 -o=temp')
-    parser.add_argument('-e','--expFile', type = str, default = 'ExpressionData.csv')
-    parser.add_argument('-g','--geneOrderingFile', type = str, default = 'GeneOrdering.csv')
-    parser.add_argument('-f','--netFile', type = str, default = 'STRING-network.csv')
-    parser.add_argument('-i','--TFFile', type = str, default = 'human-tfs.csv')
-    parser.add_argument('-p','--pVal', type=float, default = 0.01)
-    parser.add_argument('-c','--BFcorr', action='store_true', default = False)
-    parser.add_argument('-n','--numGenes', type=int, default = 500)
-    parser.add_argument('-t','--TFs', action='store_true', default = False)
+    parser.add_argument('-e','--expFile', type = str)
+    parser.add_argument('-g','--geneOrderingFile', type = str)
+    parser.add_argument('-f','--netFile', type = str)
+    parser.add_argument('-i','--TFFile', type = str)
+    parser.add_argument('-p','--pVal', type=float)
+    parser.add_argument('-c','--BFcorr', action='store_true')
+    parser.add_argument('-n','--numGenes', type=int)
+    parser.add_argument('-t','--TFs', action='store_true')
     parser.add_argument('-o','--outPrefix', type = str, default = 'BL-')
     return parser
 def parse_arguments():
